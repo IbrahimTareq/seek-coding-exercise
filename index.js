@@ -43,3 +43,26 @@ const deals = [
         evaluate : function() {}
     }
 ];
+
+class Checkout {
+    constructor(name, ads) {
+        this.name = name;
+        this.ads = ads;
+    }
+
+    calculateTotal() {
+        let total = 0; 
+
+        this.ads.forEach(ad => {
+            total = total + ad.price;
+        })
+
+        console.log("Total without deals: ", total)
+    }
+
+    printAds() {
+        this.ads.forEach(ad => {
+            console.log(`Ad Type: ${ad.type}`)
+        });
+    }
+}
