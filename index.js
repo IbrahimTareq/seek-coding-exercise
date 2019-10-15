@@ -1,4 +1,5 @@
 const _ = require('lodash');
+
 class Ad {
     constructor(type, price) {
         this.type = type;
@@ -19,7 +20,7 @@ premiumAd = new Ad("Premium", 394.99);
 const rules = [
     { name: 'SecondBite', shortName: 'SB', deals: [1] },
     { name: 'AxilCoffeeRoasters', shortName: 'ACR', deals: [2] },
-    { name: 'MYER', shortName: 'MYER', deals: [3,4] }
+    { name: 'MYER', shortName: 'MYER', deals: [3, 4] }
 ];
 
 const deals = [
@@ -78,6 +79,7 @@ class Checkout {
     }
 
     calculateTotal() {
+        let obj, tempTotal;
         let total = 0; 
 
         this.ads.forEach(ad => {
@@ -85,6 +87,47 @@ class Checkout {
         })
 
         console.log("Total without deals: ", total)
+
+        rules.forEach(rule => {
+            if (rule.name === this.name && rule.deals.length > 0) {
+                rule.deals.forEach(deal => {
+                    switch(deal) {
+                        case 1:
+                          // 3 for 2 on Classic Ads
+                          obj = _.find(deals, {id: 1});
+                          tempTotal = obj.evaluate(this.ads, total)
+                          total = tempTotal;
+                          break;
+                        case 2:
+                          // Standout Ads discount
+                          obj = _.find(deals, {id: 2});
+                          tempTotal = obj.evaluate(this.ads, total)
+                          total = tempTotal;
+                          break;
+                        case 3:
+                          // 5 for 4 on Standout Ads
+                          obj = _.find(deals, {id: 3});
+                          tempTotal = obj.evaluate(this.ads, total)
+                          total = tempTotal;
+                          break;
+                        case 4:
+                          // Premium Ads discount
+                          obj = _.find(deals, {id: 4});
+                          tempTotal = obj.evaluate(this.ads, total)
+                          total = tempTotal;
+                          break;
+                        default:
+                          console.log("Deal type not found")
+                    }
+                })
+            }
+        })
+
+        console.log("----------")
+        console.log("Customer: ", this.name);
+        console.log("Items: ", _.map(this.ads, 'type'));
+        console.log("Total: $" + total);
+        return total;
     }
 
     printAds() {
@@ -93,3 +136,6 @@ class Checkout {
         });
     }
 }
+
+order = new Checkout("SecondBite", [classicAd, classicAd, classicAd, standoutAd]);
+order.calculateTotal();
