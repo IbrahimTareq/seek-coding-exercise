@@ -1,1 +1,1 @@
-# seek-coding-exercise
+# Coding exercise for Seek
